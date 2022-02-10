@@ -1,0 +1,13 @@
+/* pages/login/login.wxss */
+.container{
+  background-color: rgb(255, 246, 234);
+}
+input{
+  margin: 25rpx;
+  height: 80rpx;
+}
+.tip{
+  color: rgb(252, 154, 154);
+  margin: 35rpx;
+  font-size:x-small;
+}

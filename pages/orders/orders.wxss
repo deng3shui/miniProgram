@@ -1,0 +1,27 @@
+.time{
+font-size: small;
+}
+.small-img{
+  width:100rpx;
+  height:100rpx;
+}
+button{
+  border-radius: 20rpx;  
+  line-height: 70rpx;
+  margin: 20rpx;
+}
+.order{
+  height:350rpx;
+  width:700rpx;
+  padding:20rpx;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+.order-button{
+  position: relative;
+  right: -300rpx;
+}
+.order-num{
+  position: relative;
+  right: -100rpx;
+}

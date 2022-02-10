@@ -1,0 +1,99 @@
+/**app.wxss**/
+
+.container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  color: rgb(88, 88, 88);
+} 
+.column{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.row{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+input{
+  width: 400rpx;
+  height: 60rpx;
+  margin: 10rpx;
+  padding-left: 10rpx;
+  font-size: small;  
+  border-radius: 10rpx;
+  background-color: white;
+  border: 1px solid rgba(128, 128, 128, 0.192);
+
+}
+button{
+  width: 400rpx;
+  margin: 40rpx;
+  margin: 0;
+}
+.warn{
+  background-color:rgb(247, 126, 138);
+  color:white;
+}
+.normal{
+  color:rgb(247, 126, 138);
+  background-color:white;
+}
+.toolbar{
+    height: 100rpx;
+    width: 750rpx;
+    background-color: antiquewhite;
+    position: fixed;
+    top: 0;
+}
+.classify2 {
+  width: 750rpx;
+  height: 200rpx;
+  justify-content: space-around;
+  border-bottom: rgba(128, 128, 128, 0.151) solid 1px;
+}
+.right{
+  height: 100%;
+  justify-content: space-around;
+}
+.right button{
+  line-height: 50rpx;
+}
+.classify2 image {
+  width: 130rpx;
+  height: 130rpx;
+  padding: 10rpx;
+}
+.classify2 input{
+  width: 250rpx;
+  margin-right: 150rpx;
+  border: 0;
+}
+.rightMenu {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.text{
+  width: 150rpx;
+  height: 130rpx;
+  align-items: flex-start;
+  justify-content: space-around;
+}
+.address{
+  width:600rpx;
+  height:200rpx;
+  background-color:rgba(238, 238, 238, 0.363);
+  word-break:break-all;
+  border-radius: 10rpx;
+  padding: 20rpx;
+  text-align: right;
+  margin: 20rpx;
+}

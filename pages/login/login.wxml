@@ -1,0 +1,13 @@
+<!--pages/login/login.wxml-->
+<view class="container">
+  <view style="position:relative;top:-50rpx">
+    <input  placeholder="请输入用户名"  model:value="{{userName}}" data-value="{2,5}" bindblur=""></input>
+    <input  placeholder="请输入密码" password="true" model:value="{{password1}}" ></input>
+    <input wx:if="{{isRegistered}}" placeholder="请在再次输入密码" model:value="{{password2}}"></input>
+    <span class='tip'>{{tip}}</span>
+  </view>
+  <view>
+    <button class="warn" wx:if="{{!isRegistered}}">登录</button>
+    <button class=" warn" wx:if="{{isRegistered}}">注册</button></view>
+  <dialog></dialog>
+</view>

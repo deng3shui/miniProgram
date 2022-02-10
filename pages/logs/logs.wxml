@@ -1,0 +1,115 @@
+<!--pages/menu/menu.wxml-->
+<view class="container"style="flex-direction: row;" wx:if="{{!isSelectReceipt&!isMerchxiuant}}">
+    <!-- 菜单 -->
+    <view class="rightMenu ">
+      <!-- 地址 -->
+      <view class="classify2 row " wx:if="{{isCheckout&!isSelectReceipt}}" style="height:300rpx;" bindtap="Receipt">
+        <view class="column address">         
+          <view>
+            <span>{{receipt.name}}  </span>
+            <span>{{receipt.tel}}</span>
+          </view>
+          <span>{{receipt.address}}</span>
+        </view>
+      </view>
+      <!-- 菜单遍历渲染 -->
+      <view class='classify2 row' wx:for="{{list}}" wx:for-index="key"  wx:for-item="value" wx:if="{{((value.num>0)&carOpen)|!carOpen}}">
+      <!-- 左边图片 -->
+        <image src='{{value.src}}'></image>
+        <!-- 中间名字+价格 -->
+        <view class="text column">
+          <span style="font-size:medium">{{value.name}}</span>
+          <view style="font-size:small">{{value.value}}
+          <!-- 数量 -->
+          <view style="font-size:small" wx:if="{{isCheckout}}">x{{value.num}}</view>
+          </view>
+        </view>
+        <!-- 右边用户组件 -->
+        <view class="right column">
+        <!-- 加减组件 -->
+          <view class="nums row">        
+            <view class="subtract" data-value="{{key}}" bindtap="subtract">-</view>
+            <input value="{{value.num}}" data-value="{{key}}" bindinput="input"></input>
+            <view class="add" data-value="{{key}}" bindtap="add">+</view>
+          </view>
+          <!-- 小计 -->
+          <view class="nums row"  wx:if="{{isCheckout}}">
+          小计：{{value.num*value.value}}    
+          </view>    
+        </view>
+      </view>
+    </view>
+    <!-- 顾客显示购物车 -->
+    <view class="car" wx:if="{{!isCheckout}}">
+      <view class="iconfont icon-3" bindtap="clickCar"></view>
+      <view class="car_left row">
+        <span class="totall">总价：{{totall}}</span>
+        <button class="warn" style="width:150rpx;height:75rpx;margin-left: 150rpx;" bindtap="checkout">结算</button>
+      </view>
+    </view>
+            <!-- 顾客结算 -->
+      <view class="car row" wx:if="{{isCheckout}}" style="justify-content:space-around;">
+        <span class="totall">总价：{{totall}}</span>
+        <button class="normal" style="width:150rpx;height:75rpx" bindtap="checkout" bindtap="returncheckout">返回</button>
+        <button class="warn" style="width:150rpx;height:75rpx" bindtap="check">确定</button>
+      </view>
+</view>
+<view class="container"style="flex-direction: row;" wx:if="{{isMerchant}}">
+    <!-- 菜单 -->
+    <view class="rightMenu ">
+    <!-- 搜索 -->
+      <view class="classify2 row" style="height:100rpx;justify-content: center;">
+        <view class="iconfont icon-icon_search"></view>
+        <input  placeholder="请输商品名进行搜索"  value="{{searchMenus}}" bindinput="search"></input>
+        <button class="normal" style="width:150rpx;height:75rpx;line-height:70rpx">新增</button>
+      </view>
+      <!-- 菜单遍历渲染 -->
+      <view class='classify2 row' wx:for="{{list}}" wx:for-index="key"  wx:for-item="value" wx:if="{{!searchMenus||value.name==searchMenus}}">
+      <!-- 左边图片 -->
+        <image src='{{value.src}}'></image>
+        <!-- 中间名字+价格 -->
+        <view class="text column">
+          <span style="font-size:medium">{{value.name}}</span>
+          <view style="font-size:small">{{value.value}}
+        </view> 
+        </view>
+        <!-- 修改组件 -->
+        <view class="right column">
+        <button class="warn" style="width:150rpx;height:60rpx;font-size:small">删除</button>
+        <button class="normal" style="width:150rpx;height:60rpx;font-size:small">修改</button>
+        </view>
+      </view>
+      <!-- 菜单修改 -->
+      <view class="classify2 row" wx:if="isReviseMenu">
+      </view>
+    </view>
+</view>
+<view class="container"style="flex-direction: row;"  wx:if="{{isSelectReceipt}}">
+    <!-- 地址修改 -->
+    <view class="rightMenu column">
+      <button class="normal" wx:if="{{!isChangeReceipt}}" data-value="0" bindtap="addReceipt">新增地址</button>
+      <view class='classify2 row' wx:for="{{receiptList}}" wx:if="{{!isChangeReceipt}}" wx:for-index="key"  wx:for-item="value" style="height:300rpx">
+           <!-- 地址详细 -->
+        <view class="column">         
+          <input  placeholder="请输入姓名"  value="{{value.name}}" disabled="{{1}}"></input>
+          <input  placeholder="请输入电话"  value="{{value.tel}}" disabled="{{1}}"></input>
+          <input  placeholder="请输入地址"  value="{{value.address}}"  disabled="{{1}}"></input>
+        </view>
+        <!-- 修改组件 -->
+        <view class="right column">
+        <button class="warn" style="width:150rpx;height:60rpx;font-size:small" data-value="{{key}}" bindtap="seletReceipt">选择</button>
+        <button class="normal" style="width:150rpx;height:60rpx;font-size:small" data-value="{{[value,key]}}" bindtap="changeReceipt">修改</button>
+        <button class="warn" style="width:150rpx;height:60rpx;font-size:small" data-value="{{key}}" bindtap="delectReceipt">删除</button>
+        </view>
+      </view>
+      <view class='classify2 column' style="height:400rpx" wx:if="{{isChangeReceipt}}">
+           <!-- 地址详细 -->
+        <form bindsubmit="formSubmit" bindreset="formReset" class="column"> 
+          <input  placeholder="请输入姓名" name="name" value="{{receipt.name}}"></input>
+          <input  placeholder="请输入电话" name="tel" value="{{receipt.tel}}"></input>
+          <input  placeholder="请输入地址" name="address" value="{{receipt.address}}"></input>
+          <button class="warn" style="width:180rpx;height:60rpx;font-size:small" data-value="{{key}}" formType="submit">确定修改</button>
+        </form>
+      </view>
+    </view>
+</view>

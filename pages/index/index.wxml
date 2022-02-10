@@ -1,0 +1,23 @@
+<!--index.wxml-->
+<view class="container">
+  <view class="block">
+      <view class="iconfont icon-a-gengduocaidangongneng"></view>
+      <span class="title">菜单管理</span>
+    </view>
+    <view class="block">
+      <view class="iconfont icon-a-gengduocaidangongneng"></view>
+      <span class="title">开始点餐</span>
+    </view>
+    <view class="block">
+      <view class="iconfont icon-zhinanzhen2"></view>
+      <span class="title">收货地址</span>
+    </view>
+    <view class="block">
+      <view class="iconfont icon-a-renwuqingdanliebiao"></view>
+      <span class="title">订单管理</span>
+    </view>
+    <view class="block">
+      <view class="iconfont icon-a-cuowuguanbi"></view>
+      <span class="title">系统退出</span>
+    </view>
+</view>

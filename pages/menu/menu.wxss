@@ -1,0 +1,83 @@
+/* pages/menu/menu.wxss */
+.leftMenu {
+  position: fixed;
+  top:0;
+  left: 0;
+}
+.nums{
+  width: 150rpx;
+  height:50rpx;
+}
+.nums input{
+  width: 40rpx;
+  height: 40rpx;
+  margin: 0 10rpx 0 10rpx;
+  text-align: center;
+}
+.nums .add,.subtract{
+  width: 40rpx;
+  height: 40rpx;
+  line-height: 40rpx;
+  text-align: center;
+  color: white;  
+  background-color: rgb(247, 138, 138);
+  border-radius: 50%;
+}
+.car{
+  width: 100%;
+  height: 100rpx;
+  background-color: rgb(255, 253, 249);
+  box-shadow:inset 0px 15px 10px -15px rgba(88, 88, 88, 0.171);  
+  position: fixed;
+  bottom: 0;
+  border-radius: 20px;
+  z-index: 99;
+}
+.car button{
+  border-radius: 20rpx;  
+  line-height: 70rpx;
+}
+.car_left {
+  position: fixed;
+  bottom: 10rpx;
+  right: 20rpx;
+}
+.totall{
+  width: 200rpx;
+  color:rgb(247, 126, 138);
+  font-size: large;}
+
+  
+@font-face {
+  font-family: "iconfont"; /* Project id 3155024 */
+  src: url('//at.alicdn.com/t/font_3155024_qe8kbhqc6n.woff2?t=1642735016772') format('woff2'),
+       url('//at.alicdn.com/t/font_3155024_qe8kbhqc6n.woff?t=1642735016772') format('woff'),
+       url('//at.alicdn.com/t/font_3155024_qe8kbhqc6n.ttf?t=1642735016772') format('truetype');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: rgb(247, 138, 138);
+}
+
+.icon-icon_search:before {
+  content: "\e60b";
+}
+
+.icon-3:before {
+  font-size: 150rpx;
+  content: "\e623";
+  position: relative;
+  bottom: 80rpx;
+  left: 50rpx;}
+
+.icon-jia:before {
+  content: "\e600";
+  font-size: 70rpx;
+}
+
+

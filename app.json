@@ -1,0 +1,34 @@
+{
+  "pages": [         
+    "pages/login/login",
+    "pages/orders/orders",
+    "pages/menu/menu",
+    "pages/index/index",  
+    "pages/logs/logs"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "点餐系统",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "list": [ {
+      "pagePath": "pages/menu/menu",
+      "text": "菜单"
+    },{
+      "pagePath": "pages/login/login",
+      "text": "登录"
+    },{
+      "pagePath": "pages/orders/orders",
+      "text": "订单"
+    }
+  ]
+  },
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents",
+  "useExtendedLib": {
+    "weui": true
+  }
+
+}

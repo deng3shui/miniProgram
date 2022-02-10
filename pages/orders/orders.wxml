@@ -1,0 +1,63 @@
+<view class="container"style="flex-direction: row;">
+    <!-- 细节 -->
+    <view class="rightMenu " wx:if="{{isDetail}}" bindtap="displayDetail">
+          <!-- 地址 -->
+          <view class="time" style="margin-left:20rpx">{{order.time}}</view>
+          <view class="classify2 row " style="height:300rpx;">
+              <view class="column address">   
+                <view>      
+                  <span>{{order.receipt.name}}  </span>
+                  <span>{{order.receipt.tel}}</span>
+                </view>
+                <span>{{order.receipt.address}}</span>
+            </view>
+      </view>
+      <!-- 菜单遍历渲染 -->
+      <view class='classify2 row' wx:for="{{order.list}}" wx:for-index="key"  wx:for-item="value">
+      <!-- 左边图片 -->
+        <image src='{{value.src}}'></image>
+        <!-- 中间名字+价格 -->
+        <view class="text column">
+          <span style="font-size:medium">{{value.name}}</span>
+          <view style="font-size:small">{{value.value}}
+          <!-- 数量 -->
+          <view style="font-size:small">x{{value.num}}</view>
+          </view>
+        </view>
+        <view class="right column">
+          <!-- 小计 -->
+          <view class="nums row">
+          小计：{{value.num*value.value}}    
+          </view>    
+        </view>
+      </view>
+    </view>
+    <!-- 订单列表 -->
+    <view class="rightMenu" wx:if="{{!isDetail}}">
+      <view class="classify2 row " wx:for="{{orderList}}"  wx:for-index="key"  wx:for-item="value"
+       wx:if="{{1}}" data-value="{{value}}" bindtap="showDetail" style="height:450rpx;">
+        <view class="column order">   
+          <view class="time">{{value.time}}</view>
+          <view class="row">
+            <view wx:for="{{value.list}}" wx:for-index="key"  wx:for-item="value" wx:if="{{key<3}}">
+            <image src='{{value.src}}' class="small-img" style="width:130rpx;height:130rpx;"></image>
+            </view>
+            <view class="order-num column">
+              <span>￥{{value.totall}}</span>
+              <span>共{{value.nums}}件</span>
+            </view>
+          </view>
+          <view class="row order-button">
+            <button class="normal" style="width:150rpx;height:75rpx">确定</button>
+            <button class="warn" style="width:150rpx;height:75rpx">删除</button>
+          </view>
+       </view>
+      </view>
+      <!-- <view class="classify2 row " wx:for="{{orderList}}"  wx:for-index="key"  wx:for-item="value">
+      {{value.list}}
+          <view  wx:for="{{value.list}}"  wx:for-index="key"  wx:for-item="value">
+          11{{value.name}}
+          </view>
+      </view> -->
+    </view>
+</view>

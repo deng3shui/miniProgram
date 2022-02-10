@@ -1,0 +1,63 @@
+/**index.wxss**/
+.block{
+  width: 75%;
+  height: 15%;
+  background-color: white;
+  border-radius: 5px;
+  margin: 1rem;
+  border: 1px solid rgba(247, 138, 138, 0.26);
+  padding-left: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  color: rgb(247, 138, 138);
+  background-color: rgb(255, 250, 244);
+
+}
+.title{
+    font-size:2.5rem;
+}
+@font-face {
+  font-family: "iconfont"; /* Project id 3151162 */
+  src: url('//at.alicdn.com/t/font_3151162_s405s055mw.woff2?t=1642573134957') format('woff2'),
+       url('//at.alicdn.com/t/font_3151162_s405s055mw.woff?t=1642573134957') format('woff'),
+       url('//at.alicdn.com/t/font_3151162_s405s055mw.ttf?t=1642573134957') format('truetype');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 100rpx;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+}
+
+.icon-a-gengduocaidangongneng:before {
+  content: "\e689";
+}
+
+.icon-tishi:before {
+  content: "\e69a";
+}
+
+.icon-a-cuowuguanbi:before {
+  content: "\e6aa";
+}
+
+.icon-a-renwuqingdanliebiao:before {
+  content: "\e6b5";
+}
+
+.icon-gouwuche:before {
+  content: "\e6bb";
+}
+
+.icon-zhinanzhen2:before {
+  content: "\e6bf";
+}
+
+.icon-a-wendangjiludingdan:before {
+  content: "\e6c1";
+}
