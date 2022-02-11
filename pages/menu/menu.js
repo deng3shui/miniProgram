@@ -1,42 +1,26 @@
 // pages/orders/orders.js
 var app = getApp()
-
+const db = wx.cloud.database()
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
+    // 通用
     status : 1,
-    receiptStatus:0,
+    isMerchant:'',
+    receiptList:'',
+    // 用户
+    id:'',
+    account:'',
     totall : 0,
-    searchMenus : '',
+    receiptStatus:0,
     receipt:{
       name:'',
       tel:'',
       address:'' ,
       receiptIndex:0,
     },
-    receiptList:[
-      {
-        name:'迪迦',
-        tel:'13093847823',
-        address:'ww3qed' ,
-      },{
-        name:'赛文',
-        tel:'13093847823',
-        address:'ww3qed' ,
-      },{
-        name:'艾斯',
-        tel:'13093847823',
-        address:'ww3qed' ,
-      },{
-        name:'泰罗',
-        tel:'13093847823',
-        address:'ww3qed' ,
-      },
-      
-    ]
+    // 商家
+    setmenu:1,
+    searchMenus : '',
   },
   adjust:function(e){
     let type = e.currentTarget.dataset.value[0]
@@ -78,9 +62,7 @@ Page({
     let status = this.data.status
     console.log(type)
     switch(type){
-      
       case '0' :{
-        console.log("00000")
         if (status === 1){
           this.setData({
             status : 2,
@@ -94,14 +76,12 @@ Page({
         break
       }
       case '1' :{
-        console.log("11111111")
         this.setData({
           status : 3
         })
         break
       }
       case '2' :{
-        console.log("222222")
         this.setData({
           status : 1
         })
@@ -216,37 +196,51 @@ Page({
       }
       // 删除
       case '2' :{
-        // let index = e.currentTarget.dataset.value[1]
-        // this.data.list.splice(index,1)
-        // let list = this.data.list
-        // this.setData({
-        //   list : list ,
-        // })
-
       }
       // 修改
       case '3' :{
         let index = e.currentTarget.dataset.value[1]
-        
       }
     }
   },
-
+  setDbData:function(){
+    const self= this
+    db.collection('account').doc(this.data.id).update({
+      // data 传入需要局部更新的数据
+      data: {
+        receiptList: self.data.receiptList
+      },
+      success: function(res) {
+        console.log("成功替换地址")
+      }
+    })
+  },
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
     this.setData({
-      isMerchant: app.globalData.isMerchant,
       list: app.globalData.list,
+      account:app.globalData.account
     });
+    const self = this
+    db.collection('account').where({account : app.globalData.account}).get({
+      success:function(res){
+        self.setData({
+          receiptList: res.data[0].receiptList,
+          id:res.data[0]._id,
+        })
+        if(res.data[0].isMerchant===true){
+          self.setData({status:0})
+        }
+      }
+    })
   },
 
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-
   },
 
   /**
@@ -260,13 +254,15 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-
+    console.log("页面隐藏")
+    
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
+    console.log("页面卸载")
 
   },
 

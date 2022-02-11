@@ -23,7 +23,9 @@ App({
   },
   globalData: {
     userInfo: null,
-    isMerchant:1,
+    isMerchant:'1',
+    id:'',
+    account:'玛卡巴卡',
     list:[
       {
         src: '/img/a-jitui_huaban1fuben14.png',
