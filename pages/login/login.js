@@ -3,37 +3,31 @@ var app = getApp()
 const db = wx.cloud.database()
 Page({
   data: {
-    isMerchant:'',
+    // input
     account:'',
     password1:'',
     password2:'',
+    accountRes:{},
     isLogin:1,
     tip:'',
   },
   checkAccount:function(e){
     if(this.data.account.length===0){
-      this.setData({
-        tip:'请输入用户名',
-      })
+      this.setData({ tip:'请输入用户名'})
     }
     else if (this.data.tip.length===0){
       let self = this
       let isLogin = this.data.isLogin
       let account = this.data.account
-      const db = wx.cloud.database()
       db.collection('account').where({
         account: account
       }).get({
         success: function(res) {
           if(isLogin){
-            res.data.length===0 ? self.setData({
-              tip :'用户名不存在，请重新输入或点此注册',
-            }) : console.log(用户名存在)
+            res.data.length===0 ? self.setData({tip :'用户名不存在，请重新输入或点此注册' }) : self.setData({accountRes : res.data[0]})
           }
           else{
-            res.data.length===1 ? self.setData({
-              tip :'用户名已占有，请重新输入',
-            }) : console.log(用户名占用)
+            res.data.length===1 ? self.setData({tip :'用户名已占有，请重新输入'}) : 0
           }
       }
   })
@@ -45,81 +39,41 @@ Page({
     let length = e.detail.value.length
     let tip
     (length < min)|(length > max )? tip='请输入'+min+'到'+max+'之间的长度' : tip=''
-    this.setData({
-      tip : tip
-    })
-  },
-  login:function(){
-    let i = (this.data.account.length !==0)&(this.data.password1.length !==0)&(this.data.tip.length===0)
-    if(i){
-      console.log('验证密码')
-      let self = this
-      let account = this.data.account
-      db.collection('account').where({
-        account: account
-      }).get({
-        success: function(res) {
-          console.log('数据库密码'+res.data[0].password)
-          console.log('输入密码'+self.data.password1)
-          if(res.data[0].password==self.data.password1){
-            wx.switchTab({
-              url:'../menu/menu',
-            })
-          }
-          else{
-            self.setData({tip:'密码错误'})
-          }
-
-        }
-  })
-    }
+    this.setData({ tip : tip })
   },
   isregister:function(){
     this.setData({
       isLogin : 0,
       tip:'',
     })
-    console.log(this.data.isLogin)
   },
   checkPassword:function(){
     console.log('检查密码是否相同')
     this.data.password1 === this.data.password2?this.setData({tip:''}):this.setData({tip:'两次密码不同'})
   },
+  login:function(){
+    if((this.data.account.length !==0)&(this.data.password1.length !==0)&(this.data.tip.length===0)){
+      if(this.data.password1 == this.data.accountRes.password){
+        app.globalData.accountRes = this.data.accountRes
+            wx.switchTab({url:'../menu/menu',})
+      }
+      else this.setData({tip:'密码错误'})
+    }
+  },
   register:function(){
     if(this.data.tip.length===0){
+      let data = {
+        account:this.data.account,
+        password1:this.data.password1,
+        isMerchant: 0,
+        receiptList:[]
+      }
       db.collection('account').add({
-        data: {
-          account: 'wxdx',
-          password: '123456',
-          isMerchant: 0,
-          receiptList: [
-            {
-              name: '迪迦',
-              tel: '13093847823',
-              address: 'ww3qed'
-            },
-            {
-              name: '赛文',
-              tel: '13093847823',
-              address: 'ww3qed'
-            },
-            {
-              name: '艾斯',
-              tel: '13093847823',
-              address: 'ww3qed'
-            },
-            {
-              name: '泰罗',
-              tel: '13093847823',
-              address: 'ww3qed'
-            }
-          ]
-        },
+        data: data,
         success: function(res) {
-          console.log(res)
-          wx.switchTab({
-            url:'../menu/menu',
-          })
+          data._id = res._id
+          app.globalData.accountRes = data
+          wx.switchTab({url:'../menu/menu',})
         }
       })
     }
@@ -128,10 +82,6 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    this.setData({
-      isMerchant: app.globalData.isMerchant,
-    });
-    console.log(this.data.isMerchant)
   },
 
   /**
@@ -159,9 +109,29 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-    console.log('页面卸载')
-    app.globalData.account = this.data.account
-    console.log(app.globalData.account)
+    console.log('login页面卸载')
+    // 商家订单
+    if(this.data.accountRes.isMerchant)
+    {
+      db.collection('orderList').get({
+        success: function(res) {
+          app.globalData.orderList = res.data
+        }
+      })
+    }
+        // 顾客订单
+    else
+    {
+      db.collection('orderList').where({account : this.data.accountRes.account}).get({
+      success: function(res) {
+        res.data.map(item=>{
+          let nums = 0
+          item.list.map(item1=>{ nums += item1.num })
+          item.nums = nums
+        })
+        app.globalData.orderList = res.data
+      }
+    })}
   },
 
   /**

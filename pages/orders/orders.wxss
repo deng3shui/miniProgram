@@ -19,7 +19,7 @@ button{
 }
 .order-button{
   position: relative;
-  right: -300rpx;
+  right: -220rpx;
 }
 .order-num{
   position: relative;

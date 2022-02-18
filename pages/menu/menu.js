@@ -1,12 +1,12 @@
-// pages/orders/orders.js
 var app = getApp()
 const db = wx.cloud.database()
 Page({
   data: {
     // 通用
+    list:[],
     status : 1,
-    isMerchant:'',
-    receiptList:'',
+    receiptList:[],
+    orderList:{},
     // 用户
     id:'',
     account:'',
@@ -19,8 +19,13 @@ Page({
       receiptIndex:0,
     },
     // 商家
-    setmenu:1,
+    menuId:'',
     searchMenus : '',
+    setStatus:0,
+    menuSrc:'/img/add.png',
+    menuName:'',
+    menuValue:'',
+    menu:{},
   },
   adjust:function(e){
     let type = e.currentTarget.dataset.value[0]
@@ -76,30 +81,16 @@ Page({
         break
       }
       case '1' :{
-        this.setData({
-          status : 3
-        })
+        if(this.data.totall>0) this.setData({status : 3})
         break
       }
       case '2' :{
-        this.setData({
-          status : 1
-        })
+        this.setData({status : 1})
         break
       }
       case '3' :{
-        let newOrder =[]
-        this.data.list.map(item=>{
-          if(item.num>0) newOrder.push(item)
-        })
-        console.log(newOrder)
-                  this.setData({
-            status : 1,
-          })
-    
-        wx.switchTab({
-          url:'../orders/orders',
-        })
+        this.newOrder()
+        this.setData({status : 1})
         break
       }
       case '4' :{
@@ -110,10 +101,44 @@ Page({
       }
     }
   },
+  newOrder:function(){
+    if(this.data.totall>0){
+      let list = []
+      let time = new Date()
+      time = time.getFullYear() + '/' + (time.getMonth() + 1) + '/' + time.getDate() + '/'+time.getHours()+':'+time.getMinutes()
+      this.data.list.map(item=>{if(item.num>0){list.push(item)}})
+      let newOrder = {
+        account : app.globalData.accountRes.account,
+        receipt : this.data.receipt,
+        totall : this.data.totall,
+        userIsShow : 1,
+        merchantIsShow : 1,
+        time : time,
+        list :list,
+      }
+      console.log(app.globalData.orderList)
+      db.collection('orderList').add({
+        data: newOrder,
+        success: function(res) {
+          newOrder._id = res._id
+          app.globalData.orderList.push(newOrder)
+          wx.switchTab({ url:'../orders/orders'})
+        }
+        })
+      }
+      let receiptList = this.data.receiptList
+      db.collection('account').doc(this.data.id).update({
+        data: {
+          receiptList: receiptList
+        },
+        success: function(res) {
+          console.log("成功替换地址")
+        }
+      })
+  },
   changeReceipt:function(e){
     let type = e.currentTarget.dataset.value[0]
     let index = e.currentTarget.dataset.value[1]
-    let receiptStatus = this.data.receiptStatus
     let receipt = this.data.receiptList[index]
     let receiptList = this.data.receiptList
     switch(type){
@@ -153,7 +178,7 @@ Page({
       }
     }
   },
-  formSubmit: function (e) {
+  receiptFormSubmit: function (e) {
     let receipt = e.detail.value;
     let { name, tel,address } = e.detail.value;
     let receiptList
@@ -165,7 +190,6 @@ Page({
     }
     console.log(this.data.receiptIndex)
     if(this.data.receiptIndex == "add" ){
-
       this.data.receiptList.push(receipt)
       receiptList = this.data.receiptList
     }
@@ -181,62 +205,142 @@ Page({
     })
   },
   merchantOperate : function (e){
-    let type = e.currentTarget.dataset.value[0]
-    switch (type){
-      // 搜索
+    let value = e.detail.value
+    this.setData({
+      searchMenus : value
+    })
+  },
+  chooseimg:function(){
+    const self = this
+    let img = this.data.menu.img
+    wx.chooseMedia({
+      count: 1,
+      mediaType: ['image'],
+      sourceType: ['album', 'camera'],
+      camera: 'back',
+      success(res) {
+        let menuSrc = res.tempFiles[0].tempFilePath
+        console.log("成功打开文件选择，长度为"+menuSrc)
+        if(res.tempFiles[0].size>0){
+          wx.cloud.uploadFile({
+            cloudPath: Date.now()+'.png',
+            filePath: menuSrc, 
+            success: res => {
+              console.log(res.fileID)
+              self.setData({menuSrc : res.fileID})
+            },
+            fail: err => {
+              console.log('上传图片失败')
+            }
+          })
+        }
+      }
+    })
+  },
+  setmenu:function(e){
+    let setStatus = e.currentTarget.dataset.value
+    switch(setStatus){
       case '0' :{
-        let value = e.detail.value
-        this.setData({
-          searchMenus : value
-        })
+          this.setData({setStatus : 1,})
+          break
       }
-      // 新增
       case '1' :{
-        
-      }
-      // 删除
-      case '2' :{
-      }
-      // 修改
-      case '3' :{
-        let index = e.currentTarget.dataset.value[1]
+        this.setData({setStatus : 0,})
+        break
       }
     }
   },
-  setDbData:function(){
-    const self= this
-    db.collection('account').doc(this.data.id).update({
-      // data 传入需要局部更新的数据
-      data: {
-        receiptList: self.data.receiptList
-      },
-      success: function(res) {
-        console.log("成功替换地址")
-      }
+  isEditMenu:function(e){
+    let menu = this.data.list[e.currentTarget.dataset.value]
+    this.setData({
+      menuSrc:menu.src,
+      menuName:menu.name,
+      menuValue:menu.value,
+      menuId :menu._id,
+      setStatus:2,
     })
+  },
+  changeMenu:function(e){
+    let type = e.currentTarget.dataset.value[0]
+    let index = e.currentTarget.dataset.value[1]
+    index = index?index:0
+    let list = this.data.list
+    let self = this
+    if(type!=2){
+      let menu = {}
+      menu.value = this.data.menuValue,
+      menu.name = this.data.menuName
+      menu.src= this.data.menuSrc
+      // type===0?list.splice(0,0,menu):list.splice(index,1,menu)
+      if(type===0){
+        db.collection('menu').add({
+          data: menu,
+          success: function(res) {
+            list.splice(0,0,menu)
+            self.setData({list:list})
+            console.log('成功添加')
+          }
+        })
+      }
+      if(type===1){
+        db.collection('menu').doc(self.data.menuId).update({
+          data:menu,
+          success: function() {
+            list.splice(index,1,menu)
+            self.setData({list:list})
+            console.log('成功修改')
+          }
+        })
+      }
+      this.setData({
+        // list:list,
+        menuSrc:'/img/add.png',
+        menuName:'',
+        menuValue:'',
+        setStatus:1,
+          })
+    }
+    else{
+      // list.splice(index,1)
+      // this.setData({list:list})
+      let id = list[index]._id
+      db.collection('menu').doc(id).remove({
+        success: function() {
+          list.splice(index,1)
+          self.setData({list:list})
+          console.log('成功删除')
+        }
+      })
+    }
   },
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    this.setData({
-      list: app.globalData.list,
-      account:app.globalData.account
-    });
     const self = this
-    db.collection('account').where({account : app.globalData.account}).get({
-      success:function(res){
-        self.setData({
-          receiptList: res.data[0].receiptList,
-          id:res.data[0]._id,
-        })
-        if(res.data[0].isMerchant===true){
-          self.setData({status:0})
+    let accountRes = app.globalData.accountRes
+    accountRes.isMerchant ==1? this.setData({status:0 }):this.setData({status:1 })
+    // 获取菜单
+    db.collection('menu').get({
+      success: function(res) {
+        if(accountRes.isMerchant){
+          self.setData({list : res.data})
+        }
+        else{
+          res.data .map(item=>{
+            item.value = parseInt(item.value)
+            item.num = 0
+          })    
+          self.setData({
+            list : res.data ,
+            receiptList: accountRes.receiptList,
+            receipt: accountRes.receiptList[0],
+            id:accountRes._id,
+          })
         }
       }
     })
   },
-
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
@@ -247,7 +351,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    console.log('show')
   },
 
   /**
@@ -262,8 +366,6 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-    console.log("页面卸载")
-
   },
 
   /**

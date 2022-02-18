@@ -80,6 +80,7 @@ button{
   position: absolute;
   top: 0;
   right: 0;
+  margin-bottom: 140rpx;
 }
 .text{
   width: 150rpx;

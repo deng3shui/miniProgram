@@ -58,17 +58,17 @@
     <view class="rightMenu column">
     <view class="column">
       <button class="normal" data-value="0" bindtap="changeReceipt">新增地址</button>
+      <view class='classify2 column' style="height:10rpx"></view>
       <view class='classify2 column' style="height:400rpx" wx:if="{{receiptStatus===1}}">
-           <!-- 地址详细 -->
-        <form bindsubmit="formSubmit" bindreset="formReset" class="column"> 
+        <form bindsubmit="receiptFormSubmit" class="column"> 
           <input  placeholder="请输入姓名" name="name" value="{{receipt.name}}"></input>
           <input  placeholder="请输入电话" name="tel" value="{{receipt.tel}}"></input>
           <input  placeholder="请输入地址" name="address" value="{{receipt.address}}"></input>
           <button class="warn" style="width:180rpx;height:60rpx;font-size:small" data-value="{{key}}" formType="submit">确定修改</button>
         </form>
       </view>
+    <!-- 地址详细 -->
       <view class='classify2 row' wx:for="{{receiptList}}" wx:if="{{!isChangeReceipt}}" wx:for-index="key"  wx:for-item="value" style="height:300rpx">
-           <!-- 地址详细 -->
         <view class="column">         
           <input  placeholder="请输入姓名"  value="{{value.name}}" disabled="{{1}}"></input>
           <input  placeholder="请输入电话"  value="{{value.tel}}" disabled="{{1}}"></input>
@@ -85,32 +85,40 @@
     </view>
 </view>
 <view class="container"style="flex-direction: row;" wx:if="{{status === 0}}">
-    <!-- 菜单 -->
     <view class="rightMenu ">
     <!-- 搜索 -->
       <view class="classify2 row" style="height:100rpx;justify-content: center;">
         <view class="iconfont icon-icon_search"></view>
-        <input  placeholder="请输商品名进行搜索"  value="{{searchMenus}}" data-value="0" bindinput="merchantOperate"></input>
-        <button class="normal" style="width:150rpx;height:60rpx;font-size:small; margin-left: 50rpx;" data-value="1" bindtap="merchantOperate">新增</button>
+        <input  placeholder="请输商品名进行搜索"  value="{{searchMenus}}"bindinput="merchantOperate"></input>
+        <button class="normal head_button"  wx:if="{{setStatus===0}}" data-value="0" bindtap="setmenu">设置</button>
+        <button class="normal head_button"  wx:if="{{setStatus!=0}}" data-value="1" bindtap="setmenu">确定</button>
+      </view>
+            <!-- 添加菜单 -->
+     <view class='classify2 row' wx:if="{{setStatus!=0}}">
+        <image src='{{menuSrc}}'bindtap="chooseimg"></image>
+        <view class="text column">
+          <input placeholder="请输商品名" style="font-size:medium" model:value="{{menuName}}"></input>
+          <input placeholder="请输商品价格" style="font-size:small" model:value="{{menuValue}}"></input> 
+        </view>
+        <view class="right column">
+        <button class="warn" style="width:150rpx;height:60rpx;font-size:small" wx:if="{{setStatus!==2}}" data-value="{{[0,key]}}" bindtap="changeMenu" >添加</button>
+        <button class="warn" style="width:150rpx;height:60rpx;font-size:small" wx:if="{{setStatus==2}}" data-value="{{[1,key]}}" bindtap="changeMenu">确定</button>
+        </view>
       </view>
       <!-- 菜单遍历渲染 -->
-      <view class='classify2 row' wx:for="{{list}}" wx:for-index="key"  wx:for-item="value" wx:if="{{!searchMenus||value.name==searchMenus}}">
+      <view class='classify2 row' wx:for="{{list}}" wx:for-index="key"  wx:for-item="value" wx:if="{{(!searchMenus||value.name==searchMenus)&(setStatus!==2)}}">
       <!-- 左边图片 -->
-        <image src='{{value.src}}'></image>
+        <image src='{{value.src}}'bindtap="chooseimg"></image>
         <!-- 中间名字+价格 -->
         <view class="text column">
-          <span style="font-size:medium">{{value.name}}</span>
-          <view style="font-size:small">{{value.value}}
-        </view> 
+          <input style="font-size:medium" value="{{value.name}}"></input>
+          <input style="font-size:small" value="{{value.value}}"></input> 
         </view>
         <!-- 修改组件 -->
-        <view class="right column">
-        <button class="warn" style="width:150rpx;height:60rpx;font-size:small" data-value="[2,key]" bindtap="merchantOperate">删除</button>
-        <button class="normal" style="width:150rpx;height:60rpx;font-size:small" data-value="[3,key]" bindtap="merchantOperate">修改</button>
+        <view class="right column" wx:if="{{setStatus!=0}}">
+        <button class="warn" style="width:150rpx;height:60rpx;font-size:small"data-value="{{[2,key]}}" bindtap="changeMenu">删除</button>
+        <button class="normal" style="width:150rpx;height:60rpx;font-size:small" data-value="{{key}}" bindtap="isEditMenu">修改</button>
         </view>
-      </view>
-      <!-- 菜单修改 -->
-      <view class="classify2 row" wx:if="isReviseMenu">
       </view>
     </view>
 </view>

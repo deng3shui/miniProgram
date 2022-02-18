@@ -1,80 +1,17 @@
-// pages/orders/orders.js
 var app = getApp()
+const db = wx.cloud.database()
 
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
     status : 1,
     receiptStatus:0,
     totall : 0,
     searchMenus : '',
     isDetail : 0,
-
-    order:{
-      receipt:{
-        name:'8',
-        tel:'88',
-        address:'888' ,
-      },
-      list:[
-        {
-          src: '/img/a-jitui_huaban1fuben.png',
-          name: '奶茶',
-          value:25,
-          num:0,
-      },{
-          src: '/img/a-jitui_huaban1fuben16.png',
-          name: '冰淇淋',
-          value:10,
-          num:0,
-        },{
-          src: '/img/a-jitui_huaban1fuben20.png',
-          name: '蛋糕',
-          value:15,
-          num:0,
-        },{
-          src: '/img/a-jitui_huaban1fuben21.png',
-          name: '巧克力',
-          value:10,
-          num:0,
-        },
-      ],
-      time: "2021-10-03，12：00",
-      totall:345,
-      nums:4,
-    },
-    orderList:[
-      {
-        receipt:{
-            name:'迪迦',
-            tel:'13093847823',
-            address:'诉愿大道88号南门' ,
-        },
-        list:[{
-            src: '/img/a-jitui_huaban1fuben16.png',
-            name: '冰淇淋',
-            value:10,
-            num:1,
-          },{
-            src: '/img/a-jitui_huaban1fuben20.png',
-            name: '蛋糕',
-            value:15,
-            num:1,
-          },{
-            src: '/img/a-jitui_huaban1fuben21.png',
-            name: '巧克力',
-            value:10,
-            num:1,
-          },
-        ],
-        time: "2021/10/03 12：00",
-        totall:35,
-        nums:3,
-      },
-    ]
+    order:{},
+    orderList:[],
+    isMerchant:'',
+    customStyle:'height:450rpx;',
   },
   showDetail:function(e){
     let order = e.currentTarget.dataset.value
@@ -88,14 +25,33 @@ Page({
       isDetail : 0,
     })
   },
+  deleteOrder:function(e){
+    let self = this
+    let index = e.currentTarget.dataset.value
+    let isShow = (this.data.isMerchant?'merchantIsShow':'userIsShow')
+    console.log(this.data.orderList[index]._id)
+    db.collection('orderList').doc(this.data.orderList[index]._id).update({
+      data: {
+        [isShow]: 0
+      },
+      success: function(res) {
+        let userIsShow = 'orderList['+index+'].'+isShow
+        self.setData({[userIsShow]:0})
+      }
+    })
+  },
+  check:function(e){
+    let index = e.currentTarget.dataset.value
+    let orderList = 'orderList['+index+'].isChecked'
+    this.setData({
+      [orderList] : 1,
+      customStyle:'height:450rpx;background-color: rgb(253, 229, 233, 0.412);'
+    })
+  },
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    this.setData({
-      isMerchant: app.globalData.isMerchant,
-      list: app.globalData.list,
-    });
   },
 
   /**
@@ -109,7 +65,10 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    this.setData({
+      isMerchant: app.globalData.isMerchant,
+      orderList: app.globalData.orderList.reverse()
+    });
   },
 
   /**

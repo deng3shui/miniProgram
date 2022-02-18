@@ -1,9 +1,4 @@
 /* pages/menu/menu.wxss */
-.leftMenu {
-  position: fixed;
-  top:0;
-  left: 0;
-}
 .nums{
   width: 150rpx;
   height:50rpx;
@@ -46,7 +41,13 @@
   width: 200rpx;
   color:rgb(247, 126, 138);
   font-size: large;}
-
+.head_button{
+  width:150rpx;
+  height:60rpx;
+  font-size:small; 
+  margin-left: 50rpx;
+  background-color: rgba(253, 229, 233, 0.712);
+}
   
 @font-face {
   font-family: "iconfont"; /* Project id 3155024 */
