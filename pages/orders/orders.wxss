@@ -18,10 +18,12 @@ button{
   justify-content: space-between;
 }
 .order-button{
-  position: relative;
-  right: -220rpx;
+  margin-left: auto;
 }
-.order-num{
-  position: relative;
-  right: -100rpx;
+.checked-img{
+  z-index: 999;
+  position: absolute;
+  filter: opacity(20%);
+  left: -150rpx;
+  bottom: 10rpx;
 }

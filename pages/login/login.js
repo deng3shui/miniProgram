@@ -12,34 +12,28 @@ Page({
     tip:'',
   },
   checkAccount:function(e){
-    if(this.data.account.length===0){
+    if(this.data.account.length===0 & this.data.tip.length==0){
       this.setData({ tip:'请输入用户名'})
     }
     else if (this.data.tip.length===0){
       let self = this
       let isLogin = this.data.isLogin
       let account = this.data.account
-      db.collection('account').where({
-        account: account
-      }).get({
+      db.collection('account').where({account: account}).get({
         success: function(res) {
-          if(isLogin){
-            res.data.length===0 ? self.setData({tip :'用户名不存在，请重新输入或点此注册' }) : self.setData({accountRes : res.data[0]})
-          }
-          else{
-            res.data.length===1 ? self.setData({tip :'用户名已占有，请重新输入'}) : 0
-          }
-      }
-  })
-    }
-  },
+          if(isLogin) res.data.length===0 ? self.setData({tip :'用户名不存在，请重新输入或点此注册' }) : self.setData({accountRes : res.data[0]})
+          else res.data.length===1 ? self.setData({tip :'用户名已占有，请重新输入'}) : 0
+        }
+      })
+  } 
+},
   checkLength:function(e){
     let min = e.currentTarget.dataset.value[0]
     let max = e.currentTarget.dataset.value[1]
     let length = e.detail.value.length
     let tip
     (length < min)|(length > max )? tip='请输入'+min+'到'+max+'之间的长度' : tip=''
-    this.setData({ tip : tip })
+    this.setData({ tip : '' })
   },
   isregister:function(){
     this.setData({
@@ -48,8 +42,8 @@ Page({
     })
   },
   checkPassword:function(){
-    console.log('检查密码是否相同')
-    this.data.password1 === this.data.password2?this.setData({tip:''}):this.setData({tip:'两次密码不同'})
+    if(this.data.tip.length==0)this.data.password1 === this.data.password2?this.setData({tip:''}):this.setData({tip:'两次密码不同'})
+
   },
   login:function(){
     if((this.data.account.length !==0)&(this.data.password1.length !==0)&(this.data.tip.length===0)){
@@ -64,7 +58,7 @@ Page({
     if(this.data.tip.length===0){
       let data = {
         account:this.data.account,
-        password1:this.data.password1,
+        password:this.data.password1,
         isMerchant: 0,
         receiptList:[]
       }
@@ -122,7 +116,7 @@ Page({
         // 顾客订单
     else
     {
-      db.collection('orderList').where({account : this.data.accountRes.account}).get({
+      db.collection('orderList').where({account : this.data.account}).get({
       success: function(res) {
         res.data.map(item=>{
           let nums = 0

@@ -10,8 +10,7 @@ Page({
     isDetail : 0,
     order:{},
     orderList:[],
-    isMerchant:'',
-    customStyle:'height:450rpx;',
+    isMerchant:'',    
   },
   showDetail:function(e){
     let order = e.currentTarget.dataset.value
@@ -25,27 +24,20 @@ Page({
       isDetail : 0,
     })
   },
-  deleteOrder:function(e){
+  
+  changeStatus:function(e){
     let self = this
-    let index = e.currentTarget.dataset.value
-    let isShow = (this.data.isMerchant?'merchantIsShow':'userIsShow')
-    console.log(this.data.orderList[index]._id)
+    let index = e.currentTarget.dataset.value[0]
+    let type = e.currentTarget.dataset.value[1]
+    let status = this.data.orderList[index].status
+    let i = 'orderList['+index+'].status'
     db.collection('orderList').doc(this.data.orderList[index]._id).update({
       data: {
-        [isShow]: 0
+        status: type
       },
       success: function(res) {
-        let userIsShow = 'orderList['+index+'].'+isShow
-        self.setData({[userIsShow]:0})
+        self.setData({[i]:type})
       }
-    })
-  },
-  check:function(e){
-    let index = e.currentTarget.dataset.value
-    let orderList = 'orderList['+index+'].isChecked'
-    this.setData({
-      [orderList] : 1,
-      customStyle:'height:450rpx;background-color: rgb(253, 229, 233, 0.412);'
     })
   },
   /**
@@ -65,9 +57,11 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
+    let orderList = app.globalData.orderList.reverse()
+    console.log(app.globalData.accountRes)
     this.setData({
-      isMerchant: app.globalData.isMerchant,
-      orderList: app.globalData.orderList.reverse()
+      isMerchant: app.globalData.accountRes.isMerchant,
+      orderList: orderList,
     });
   },
 
