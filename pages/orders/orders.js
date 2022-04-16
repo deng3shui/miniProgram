@@ -3,7 +3,6 @@ const db = wx.cloud.database()
 
 Page({
   data: {
-    status : 1,
     receiptStatus:0,
     totall : 0,
     searchMenus : '',
@@ -31,14 +30,20 @@ Page({
     let type = e.currentTarget.dataset.value[1]
     let status = this.data.orderList[index].status
     let i = 'orderList['+index+'].status'
-    db.collection('orderList').doc(this.data.orderList[index]._id).update({
+    type !==3 ? db.collection('orderList').doc(this.data.orderList[index]._id).update({
       data: {
         status: type
       },
       success: function(res) {
         self.setData({[i]:type})
       }
+    }):
+    db.collection('orderList').doc(this.data.orderList[index]._id).remove({
+      success: function(res) {
+        self.setData({[i]:4})
+      }
     })
+    
   },
   /**
    * 生命周期函数--监听页面加载

@@ -12,6 +12,7 @@ Page({
     account: '',
     totall: 0,
     receiptStatus: 0,
+    modalHidden: true,
     receipt: {
       name: '',
       tel: '',
@@ -89,21 +90,6 @@ Page({
         break
       }
       case '3': {
-        let self = this
-        wx.showModal({
-          title: '付款',
-          content: '请确认支付',
-          success (res) {
-            if (res.confirm) {
-              console.log('用户点击确定')
-              self.newOrder()
-              self.setData({ status: 1 })
-            } else if (res.cancel) {
-              console.log('用户点击取消')
-            }
-          }
-        })
-        break
       }
       case '4': {
         this.setData({
@@ -113,12 +99,39 @@ Page({
       }
     }
   },
+  buttonTap: function() {
+    this.setData({
+      modalHidden: false
+    })
+  },
+  modalCandel: function() {
+    this.setData({
+      modalHidden: true
+    })
+  },
+  modalConfirm: function() {
+    this.setData({
+      modalHidden: true
+    })
+    this.newOrder()
+    this.setData({ status: 1 })
+  },
   newOrder: function () {
     if (this.data.totall > 0) {
       let list = []
       let time = new Date()
       time = time.getFullYear() + '/' + (time.getMonth() + 1) + '/' + time.getDate() + '/' + time.getHours() + ':' + time.getMinutes()
-      this.data.list.map(item => { if (item.num > 0) { list.push(item) } })
+      let a = this.data.list.map(item => { 
+        if (item.num > 0) { 
+        list.push(item) 
+        item.num = 0 
+      } 
+      return item 
+    })
+      this.setData({
+        list : a,
+        totall: 0 
+      })
       let newOrder = {
         account: app.globalData.accountRes.account,
         receipt: this.data.receipt,
@@ -317,7 +330,7 @@ Page({
    */
   onLoad: function (options) {
     const self = this
-    let accountRes = app.globalData.accountRes
+    var accountRes = app.globalData.accountRes
     accountRes.isMerchant == 1 ? this.setData({ status: 0 }) : this.setData({ status: 1 })
     // 获取菜单
     db.collection('menu').get({
@@ -359,7 +372,7 @@ Page({
   onHide: function () {
     console.log("页面隐藏")
     let receiptList = this.data.receiptList
-    if (JSON.stringify(this.data.receiptList) !== JSON.stringify(app.globalData.accountRes.receiptList)) {
+    if (JSON.stringify(this.data.receiptList) !== JSON.stringify(app.globalData.accountRes.receiptList)&app.globalData.accountRes.isMerchant!==1) {
       db.collection('account').doc(this.data.id).update({
         data: {
           receiptList: receiptList

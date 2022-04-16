@@ -37,7 +37,7 @@
   </view>
   <!-- 订单列表 -->
   <view class="rightMenu" wx:if="{{!isDetail}}">
-    <view class="classify2 row " wx:for="{{orderList}}" wx:for-index="key" wx:for-item="value" wx:if="{{value.status!==3}}"
+    <view class="classify2 row " wx:for="{{orderList}}" wx:for-index="key" wx:for-item="value"  wx:if="{{isMerchant? value.status !==4 :value.status !== 3}}"
       style="height:400rpx;">
       <view class="column order">
         <view class="time">{{value.time}}
@@ -50,13 +50,14 @@
           </view>
           <view class="column">
             <span>￥{{value.totall}}</span>
-            <span>共{{value.nums}}件</span>
           </view>
         </view>
         <view class="row order-button">
           <view wx:if="{{value.status < 2}}">
+          <!-- 商家 -->
             <button class="normal" style="width:200rpx;height:75rpx" data-value="{{[key,1]}}" wx:if="{{isMerchant}}"
               bindtap="changeStatus" disabled="{{value.status === 1}}">{{value.status === 0 ? '确定送货':'已送货'}}</button>
+              <!-- 用户 -->
             <button class="normal" style="width:200rpx;height:75rpx" data-value="{{[key,2]}}" wx:if="{{!isMerchant}}"
               bindtap="changeStatus" disabled="{{value.status === 0}}">{{value.status === 0 ? '等待送出':'确认送达'}}</button>
           </view>

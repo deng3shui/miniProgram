@@ -21,6 +21,9 @@ App({
       }
     })
   },
+  onError (e) {  
+    console.error(e)  
+},
   globalData: {
     userInfo: null,
     accountRes:{},
