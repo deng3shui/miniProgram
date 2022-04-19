@@ -12,6 +12,7 @@ Page({
     account: '',
     totall: 0,
     receiptStatus: 0,
+    modalHidden:true,
     receipt: {
       name: '',
       tel: '',
@@ -89,7 +90,42 @@ Page({
         break
       }
       case '3': {
-        let self = this
+        
+        break
+      }
+      case '4': {
+        this.setData({
+          status: 4
+        })
+        break
+      }
+    }
+  },
+  buttonTap: function() {
+    this.setData({
+      modalHidden: false
+    })
+  },
+
+  /**
+   * 点击取消
+   */
+  modalCandel: function() {
+    // do something
+    this.setData({
+      modalHidden: true
+    })
+  },
+
+  /**
+   *  点击确认
+   */
+  modalConfirm: function() {
+    // do something
+    this.setData({
+      modalHidden: true
+    })
+    let self = this
         wx.showModal({
           title: '付款',
           content: '请确认支付',
@@ -103,15 +139,6 @@ Page({
             }
           }
         })
-        break
-      }
-      case '4': {
-        this.setData({
-          status: 4
-        })
-        break
-      }
-    }
   },
   newOrder: function () {
     if (this.data.totall > 0) {
@@ -203,7 +230,6 @@ Page({
       receipt: receipt,
       receiptList: receiptList,
       receiptStatus: 0,
-
     })
   },
   merchantOperate: function (e) {
