@@ -1,7 +1,7 @@
 <!--pages/login/login.wxml-->
 <view class="container">
   <view style="position:relative;top:-50rpx">
-    <input  placeholder="请输入用户名"  model:value="{{account}}" data-value="{{[2,5]}}" bindinput="checkLength" bindblur="checkAccount"></input>
+    <input  placeholder="请输入用户名"  model:value="{{account}}" data-value="{{[2,5]}}" bindinput="checkLength" bindblur="checkAccount" maxlength="6"></input>
     <input  placeholder="请输入密码" password="true" model:value="{{password1}}" data-value="{{[6,8]}}" bindinput="checkLength"></input>
     <input wx:if="{{!isLogin}}" password="true" model:value="{{password1}}" placeholder="请在再次输入密码" model:value="{{password2}}" bindblur="checkPassword"></input>
     <span class='tip' bindtap="isregister">{{tip}}</span>

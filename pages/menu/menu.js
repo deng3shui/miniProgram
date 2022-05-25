@@ -146,13 +146,16 @@ Page({
       let time = new Date()
       time = time.getFullYear() + '/' + (time.getMonth() + 1) + '/' + time.getDate() + '/' + time.getHours() + ':' + time.getMinutes()
       this.data.list.map(item => { if (item.num > 0) { list.push(item) } })
+      let nums = list.map(item=>{return item.num})
+      nums = nums.reduce((a,b)=>{return a+b})
       let newOrder = {
         account: app.globalData.accountRes.account,
         receipt: this.data.receipt,
         totall: this.data.totall,
         time: time,
         list: list,
-        status: 0
+        status: 0,
+        nums:nums
       }
       db.collection('orderList').add({
         data: newOrder,

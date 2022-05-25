@@ -1,19 +1,19 @@
 <!-- 商家菜单 -->
 <view class="container" style="flex-direction: row;" wx:if="{{status === 0}}">
   <view class="rightMenu ">
-    <!-- 搜索 -->
+    <!-- 搜索 菜单设置 -->
     <view class="classify2 row" style="height:100rpx;justify-content: center;">
       <view class="iconfont icon-icon_search"></view>
-      <input placeholder="请输商品名进行搜索" value="{{searchMenus}}" bindinput="merchantOperate"></input>
+      <input placeholder="请输入商品名进行搜索" value="{{searchMenus}}" bindinput="merchantOperate"></input>
       <button class="normal head_button" wx:if="{{setStatus===0}}" data-value="0" bindtap="setmenu">设置</button>
       <button class="normal head_button" wx:if="{{setStatus!=0}}" data-value="1" bindtap="setmenu">确定</button>
     </view>
-    <!-- 添加菜单 -->
+    <!-- 新增菜单 -->
     <view class='classify2 row' wx:if="{{setStatus!=0}}">
       <image src='{{menuSrc}}' bindtap="chooseimg"></image>
       <view class="text column">
-        <input placeholder="请输商品名" style="font-size:medium" model:value="{{menuName}}"></input>
-        <input placeholder="请输商品价格" style="font-size:small" model:value="{{menuValue}}"></input>
+        <input placeholder="请输入商品名" style="font-size:medium" model:value="{{menuName}}"></input>
+        <input placeholder="请输入商品价格" style="font-size:small" model:value="{{menuValue}}"></input>
       </view>
       <view class="right column">
         <button class="warn" style="width:150rpx;height:60rpx;font-size:small" wx:if="{{setStatus!==2}}"
@@ -48,8 +48,8 @@
     <!-- 地址 -->
     <view class="classify2 row " wx:if="{{ status === 3}}" style="height:300rpx;" data-value="4" bindtap="changeStatus">
       <view class="column address">
-          <span>{{receipt.name}} </span>
-          <span>{{receipt.tel}}</span>
+        <span style="color:yellow">店内用餐请输入桌号</span>
+          <span>{{receipt.name}} <span>{{receipt.tel}}</span></span>
         <view>{{receipt.address}}</view>
       </view>
     </view>
